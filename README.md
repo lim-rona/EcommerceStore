@@ -6,4 +6,4 @@
 
 <!-- ![Coverage](https://vttp2022rona.sgp1.digitaloceanspaces.com) -->
 
-[![Test on push to master](https://github.com/lim-rona/EcommerceStore/actions/workflows/testOnPush.yml/badge.svg)](https://github.com/lim-rona/EcommerceStore/actions/workflows/testOnPush.yml/)
+[![Test on push to master](https://github.com/lim-rona/EcommerceStore/actions/workflows/testOnPush.yaml/badge.svg)](https://github.com/lim-rona/EcommerceStore/actions/workflows/testOnPush.yaml/)
