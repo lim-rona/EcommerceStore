@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Please fill in your details below:</h2>
+
+    <form method="POST" th:action="@{/googleUserSignUpInfo}">
+        <table>
+            <tr>
+                <td>Email: </td>
+                <td th:text="${user.email}"></td>
+            </tr>
+            <input type="hidden" name="email" th:value="${user.email}">
+
+            <tr>
+                <td>Username: </td>
+                <td> <input type="text" name="username" size="30" required> </td>
+            </tr>
+            <tr>
+                <td>Password: </td>
+                <td> <input type="password" name="password" size="30" required> </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button type="submit">Sign Up</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <br>
+    <a th:href="@{/home}">Click here to home</a>
+    <a th:href="@{/details}">Click here to fill in your details</a>
+</body>
+</html>

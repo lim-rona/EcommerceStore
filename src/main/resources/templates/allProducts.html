@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Page</title>
+</head>
+<body>
+    <h3>insert products here</h3>
+    <h2>Categories:</h2>
+    <table>
+        <tr th:each="category: ${categoryList}">
+            <td th:text="${category.CategoryName}"> </td>
+        </tr>
+    </table>
+
+    <h2>All items:</h2>
+    <table>
+        <tr th:each="product: ${allProductsList}">
+            <td th:text="${product.productName}"> </td>
+            <!-- <input type="hidden" id="imageBase64" value="${product.imageBase64}" readonly></input>
+            <img id="imagePreview" src="#" alt="Background image"/> -->
+            <td><img th:src="|data:image/jpg;base64, ${product.imageBase64}|" /></td>
+            
+        </tr>
+    </table>
+
+    
+</body>
+</html>
