@@ -5,27 +5,126 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" 
+    integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <h3>insert products here</h3>
-    <h2>Categories:</h2>
-    <table>
-        <tr th:each="category: ${categoryList}">
-            <td th:text="${category.CategoryName}"> </td>
-        </tr>
-    </table>
+    <div th:if="${user!=null}">
+        <div th:if="${user.status}">
+            <div th:replace="authenticatedHeader :: header"></div>      
+        </div>
+        <div th:if="${user.status}!=true">
+            <div th:replace="defaultHeader :: header"></div> 
+        </div>    
+    </div>
 
-    <h2>All items:</h2>
-    <table>
-        <tr th:each="product: ${allProductsList}">
-            <td th:text="${product.productName}"> </td>
-            <!-- <input type="hidden" id="imageBase64" value="${product.imageBase64}" readonly></input>
-            <img id="imagePreview" src="#" alt="Background image"/> -->
-            <td><img th:src="|data:image/jpg;base64, ${product.imageBase64}|" /></td>
+    <div th:unless="${user!=null}">
+        <div th:replace="defaultHeader :: header"></div>
+    </div>
+
+    <!-- <form method="GET" th:action="@{/search/{productName}}">
+        <table>
+            <tr>
+                <td>Search by name here: </td>
+                <td> <input type="text" name="productName" size="30"> </td>
+            </tr>
             
-        </tr>
-    </table>
+            <tr>
+                <td></td>
+                <td>
+                    <button type="submit">Enter!</button>
+                </td>
+            </tr>
+        </table>
+    </form> -->
 
+    <!-- New -->
+
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h2>Categories:</h2>
+                
+                <nav class="navbar-light" style="background-color: #fefae0;" th:each="category: ${categoryList}">        
+                        <a class="nav-link" th:href="@{/{category}(category=${category.categoryName})}" th:text="${category.categoryName}">Tester1</a>
+                </nav>
+            </div>
+            <div class="col-10">
+                <div th:if="${returnedSearchList==null}">
+                    <div th:unless="${productList!=null}">
+                        <h2>All items:</h2>    
+                    <div class="row">
+                        <div class="row">
+                            <div class=offset-md-6>
+                                <form method="GET" th:action="@{/search/{productName}}">
+                                    <table>
+                                        <tr>
+                                            <td>Search by name here: </td>
+                                            <td> <input type="text" name="productName" size="30"> </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <button type="submit">Enter!</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-4" th:each="product: ${allProductsList}">
+                                <img th:src="|data:image/jpg;base64, ${product.imageBase64}|" width="180px" height="250px"/>
+                                <br>
+                                <a th:href="@{/product/{productName}(productName=${product.productName})}" th:text="${product.productName}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col-10">
+                <div th:unless="${returnedSearchList==null}">
+                    <h2>Your Search Item(s):</h2>     
+                    <div th:if="${not #lists.isEmpty(returnedSearchList)}">
+                        <div class="row">
+                            <div class="col-4" th:each="product: ${returnedSearchList}">
+                                <img th:src="|data:image/jpg;base64, ${product.imageBase64}|" width="200px" height="200px"/>
+                                <br>
+                                <a th:href="@{/product/{productName}(productName=${product.productName})}" th:text="${product.productName}"></a>
+                            </div>
+                        </div>
+                    </div>   
+            </div>
+            <div class="col-10">
+                <div th:if="${productList!=null}">
+                    <h2 th:text=${categoryName}> Item(s):</h2>     
+                    <div th:if="${not #lists.isEmpty(productList)}">
+                        <div class="row">
+                            <div class="col-4" th:each="product: ${productList}">
+                                <img th:src="|data:image/jpg;base64, ${product.imageBase64}|" width="200px" height="200px"/>
+                                <br>
+                                <a th:href="@{/product/{productName}(productName=${product.productName})}" th:text="${product.productName}"></a>
+                            </div>
+                        </div>
+                    </div>   
+            </div>
+            
+            </div>
+        </div>
+    </div>
+    <!-- New -->
+
+    
+
+    
     
 </body>
 </html>

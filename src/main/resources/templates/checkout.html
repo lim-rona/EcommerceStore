@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' xmlns:th='https://www.thymeleaf.org'>
+    <head>
+        <title>Checkout</title>
+        <style>
+            body {
+                font-family: 'arial';
+            }
+            #checkout-form input,
+            #checkout-form button {
+                display: block;
+                margin: 12px;
+            }
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" 
+        integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+    <body>
+        <div th:if="${user!=null}">
+            <div th:if="${user.status}">
+                <div th:replace="authenticatedHeader :: header"></div>      
+            </div>
+            <div th:if="${user.status}!=true">
+                <div th:replace="defaultHeader :: header"></div> 
+            </div>    
+        </div>
+    
+        <div th:unless="${user!=null}">
+            <div th:replace="defaultHeader :: header"></div>
+        </div>
+        <h1>Checkout: </h1>
+        <table>
+            <tr th:each="product:${cartList}">
+                <!-- <input type="hidden" name="productStat" th:value="${productStat.index}"> -->
+                
+                <!-- <td> Cart Item :
+                    <span th:text="${productStat.index}"></span>
+                </td> -->
+                <td><img th:src="|data:image/jpg;base64, ${product.imageBase64}|" width="140px" height="180px"/></td>
+                <td>Product Name:</td>
+                <td th:text="${product.productName}"></td>
+                <td>Price:</td>
+                <td>$ <span th:text="${#numbers.formatDecimal(product.price,0,2)}"></span></td>
+                <td>Quantity:</td>
+                <td th:text="${product.quantityPurchased}"></td>
+            </tr>
+        </table>
+        <br><br>
+        
+        <form th:action="@{/charge}" method=POST id="checkout-form">
+            <input type="hidden" th:value="${amount}" name="amount" />
+            <label>Total amount: $<span th:text="${#numbers.formatDecimal(amount/100,0,2)}" /></label>
+            <!-- NOTE: data-key/data-amount/data-currency will be rendered by Thymeleaf -->
+            <script
+                src='https://checkout.stripe.com/checkout.js' 
+                class='stripe-button'
+                th:attr='data-key=${stripePublicKey},
+                         data-amount=${amount},
+                         data-currency=${currency}'
+                data-name='VTTP'
+                data-description='E-commerce checkout'
+                data-image='/img/VTTP-Logo.png'
+                data-locale='auto'
+                data-zip-code='false'>
+            </script>
+        </form>
+    </body>
+</html>

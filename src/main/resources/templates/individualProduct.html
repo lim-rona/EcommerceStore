@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Individual Product</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" 
+    integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div th:if="${user!=null}">
+        <div th:if="${user.status}">
+            <div th:replace="authenticatedHeader :: header"></div>      
+        </div>
+        <div th:if="${user.status}!=true">
+            <div th:replace="defaultHeader :: header"></div> 
+        </div>    
+    </div>
+
+    <div th:unless="${user!=null}">
+        <div th:replace="defaultHeader :: header"></div>
+    </div>
+
+    <div name="forOneProduct">
+        <h2 th:text="${product.productName}"></h2>
+        <form method=GET th:action="@{/addToCart}">
+            <input type="hidden" th:field="*{product.productName}">
+            <input type="hidden" th:field="*{product.price}">
+
+            <table>
+                <tr>
+                    <td><img th:src="|data:image/jpg;base64, ${product.imageBase64}|" width="300px" height="300px"/></td>
+                </tr>
+                <tr>
+                    <td>Price:</td>
+                    <td>$ <span th:text="${product.price}"></span></td>
+                </tr>
+                <tr>
+                    <td>Quantity:</td>
+                    <td><select name="quantity">
+                        <option th:each="n:${#numbers.sequence(1,unitsInStock)}" th:value="${n}" th:text="${n}"></option>
+                        </select></td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td>
+                        <button type="submit">Add To Cart</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,5 +1,7 @@
 package vttp2022.paf.EcommerceStore;
 
+import com.stripe.Stripe;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,6 +10,7 @@ public class EcommerceStoreApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceStoreApplication.class, args);
+
 	}
 
 }

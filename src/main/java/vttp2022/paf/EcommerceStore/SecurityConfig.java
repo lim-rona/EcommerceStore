@@ -22,7 +22,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         System.out.println("SOMETHING WAS RAN HERE");
         httpSecurity
             .antMatcher("/**").authorizeRequests()
-            .antMatchers("/", "/signIn","/login").permitAll()
+            // .antMatchers("/", "/signIn","/login").permitAll()
+            .antMatchers("/**","/login").permitAll()
             .anyRequest().authenticated()
             .and()
             .oauth2Login().defaultSuccessUrl("/success");

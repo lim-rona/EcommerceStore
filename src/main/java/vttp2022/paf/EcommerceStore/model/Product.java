@@ -12,6 +12,7 @@ public class Product {
     private String brand;
     private double price;
     private int unitsInStock;
+    private int quantityPurchased;
     private byte[] image;
     private int category_id;
     private String imageBase64;
@@ -19,6 +20,12 @@ public class Product {
     //Getters and setters
     public int getProduct_id() {
         return product_id;
+    }
+    public int getQuantityPurchased() {
+        return quantityPurchased;
+    }
+    public void setQuantityPurchased(int quantityPurchased) {
+        this.quantityPurchased = quantityPurchased;
     }
     public String getImageBase64() {
         return imageBase64;
