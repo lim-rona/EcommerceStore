@@ -27,12 +27,14 @@
         <a th:href="@{/signIn}">Sign in</a>
         <a th:href="@{/cart}">Cart</a>
     </nav> -->
-    <div class="w-100">
+    <div style="position: relative;">
         <img class="img-fluid w-100" src="/img/VTTP-Banner.png" alt="VTTP-banner2" usemap="#image-map">
+        <a th:href="@{/ourStory}"><div style="position: absolute; left: 7%; top: 85%; width: 11%; height: 5%; background-color: rgba(100, 100, 100, 0);"></div></a>
 
-        <map name="image-map">
+
+        <!-- <map name="image-map">
             <area th:href="@{/ourStory}" coords="100,690,260,740" shape="rect">
-        </map>
+        </map> -->
     </div>
     
     
