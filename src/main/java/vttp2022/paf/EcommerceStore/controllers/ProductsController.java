@@ -146,8 +146,19 @@ public class ProductsController {
             if(sess.getAttribute("cartList")!=null){
                 cartList = (List<Product>)sess.getAttribute("cartList");
             }
-            cartList.add(cartProduct);
-        
+
+            boolean existsInCart = false;
+            for(Product product:cartList) {
+                if(product.getProduct_id() == cartProduct.getProduct_id()) {
+                    product.setQuantityPurchased(product.getQuantityPurchased() + cartProduct.getQuantityPurchased());
+                    existsInCart = true;
+                }
+            }
+
+            if(!existsInCart) {
+                cartList.add(cartProduct);
+            }
+
             sess.setAttribute("cartList", cartList);
         }
         

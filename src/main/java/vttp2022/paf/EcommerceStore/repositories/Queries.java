@@ -43,13 +43,34 @@ public interface Queries {
 
     //For Cart
     public static final String SQL_GET_USERID_WITH_USERNAME=
-        "select user_id from user where username like ?";
+        "select user_id from user where username = ?";
     public static final String SQL_GET_CARTID_WITH_USERID=
-        "select cart_id from Cart where user_id like ?";
+        "select cart_id from Cart where user_id=?";
     public static final String SQL_GET_CARTITEM_WITH_CARTID=
-        "select ProductName, QuantityPurchased, Price from CartItem where cart_id like ?";
+        "select ProductName, QuantityPurchased, Price from CartItem where cart_id=?";
     public static final String SQL_ADD_ITEM_INTO_USER_CART=
         "insert into CartItem(cart_id, Product_id, ProductName, Price, QuantityPurchased) values(?,?,?,?,?)";
     public static final String SQL_DELETE_ITEM_FROM_USER_CART=
-        "delete from CartItem where cart_id=? and productName=? and quantityPurchased=?";
+        "delete from CartItem where cart_id=? and productName=? and QuantityPurchased=?";
+    public static final String SQL_UPDATE_QTY_PURCHASED=
+        "update CartItem set QuantityPurchased = ? where Product_id= ? and cart_id= ?";
+    
+    //For Order History
+    public static final String SQL_CREATE_ORDHIST=
+        "insert into OrderHistory(dateAndTime, total, firstName, lastName, mobile, country, shippingAddress, user_id) values(?,?,?,?,?,?,?,?)";
+    
+    public static final String SQL_GET_ORDHISTID_WITH_DATE=
+        "select order_id from OrderHistory where dateAndTime like ?";
+    
+    public static final String SQL_ADD_ORDERITEM=
+        "insert into OrderHistoryItem(ProductName, Price, QuantityPurchased,Product_id,order_id) values(?,?,?,?,?)";
+
+    public static final String SQL_GET_ORDERHISTORY=
+        "select * from OrderHistory where user_id=?";
+    
+    public static final String SQL_GET_ORDERHISTORYITEM=
+        "select * from OrderHistoryItem where order_id=?";
+    
+    public static final String SQL_GET_ONE_ORDERHISTORY=
+        "select * from OrderHistory where order_id = ?";
 }

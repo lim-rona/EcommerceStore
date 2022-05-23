@@ -24,11 +24,24 @@ public class ProductsService {
     }
     
     public boolean addItemIntoUserCart(String productName, int quantityPurchased, double price,String username){
+        List<Product> cartList = getCartWithUsername(username);
         int user_id = productsRepo.getUserIdWithUsername(username);
         int cart_id = productsRepo.getCartIdWithUserId(user_id);
         Product product = new Product();
         product = productsRepo.returnIndividualProductByName(productName);
         int product_id = product.getProduct_id();
+        System.out.println("it went here");
+        for(Product product1: cartList){
+            System.out.println("tester" + product1.getProductName());
+            String cartProductName = product1.getProductName();
+            if(cartProductName.equals(productName)){
+                System.out.println("Something should update");
+                int qtyPurchased = product1.getQuantityPurchased()+quantityPurchased;
+                return productsRepo.updateQuantityPurchased(product_id, cart_id, qtyPurchased); 
+            }
+        }
+
+        System.out.println("It shouldn't go here");
         price = product.getPrice();
 
         return productsRepo.addItemIntoUserCart(productName,cart_id, product_id, price, quantityPurchased);

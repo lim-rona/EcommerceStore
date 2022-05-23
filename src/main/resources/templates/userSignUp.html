@@ -12,9 +12,13 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+    
     <h2>Please fill in your details below:</h2>
+    <div th:if="${message!=null}">
+        <span th:text="${message}" style="color:red"></span>
+    </div>
 
-    <form method="POST" th:action="@{/UserSignUpInfo}">
+    <form method="POST" th:action="@{/Signup/UserSignUpInfo}">
         <table>
             <tr class="form-group">
                 <td>Profile Name: </td>

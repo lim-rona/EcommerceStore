@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" 
+    integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div th:if="${user!=null}">
+        <div th:if="${user.status}">
+            <div th:replace="authenticatedHeader :: header"></div>      
+        </div>
+        <div th:if="${user.status}!=true">
+            <div th:replace="defaultHeader :: header"></div> 
+        </div>    
+    </div>
+
+    <div th:unless="${user!=null}">
+        <div th:replace="defaultHeader :: header"></div>
+    </div>
+
+    <h2>Order Id: <span th:text=${orderHistory.order_id}></span></h2>
+    <span>Date: <span th:text="${orderHistory.stringDate}"></span></span>
+    <br>
+    <span>Name: <span th:text="${orderHistory.firstName}"></span> </span>
+    <span th:text="${orderHistory.lastName}"></span>
+    <br>
+    <span>Mobile: <span th:text="${orderHistory.mobile}"></span></span>
+    <br>
+    <span>Country: <span th:text="${orderHistory.country}"></span></span>
+    <br>
+    <span>Shipping Address: <span th:text="${orderHistory.shippingAddress}"></span></span>
+    <br>
+    <span>Transaction Amount: $<span th:text="${#numbers.formatDecimal(orderHistory.total/100,0,2)}"></span></span>
+    <br>
+    <hr>
+    <br>
+    <br>
+    <table>
+        <tr th:each="product:${orderHistoryItemList}">
+            <!-- <input type="hidden" name="productStat" th:value="${productStat.index}"> -->
+            <!-- <td> Cart Item :
+                <span th:text="${productStat.index}"></span>
+            </td> -->
+            <td>
+                <img th:src="|data:image/jpg;base64, ${product.imageBase64}|" width="140px" height="180px"/>
+            </td>
+            <td>Product Name:</td>
+            <td th:text="${product.productName}"></td>
+            <td>Price:</td>
+            <td>$ <span th:text="${#numbers.formatDecimal(product.price,0,2)}"></span></td>
+            <td>Quantity:</td>
+            <td th:text="${product.quantityPurchased}"></td>
+        </tr>
+    </table>
+
+    
+    
+</body>
+</html>

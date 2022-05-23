@@ -187,5 +187,12 @@ public class ProductsRepository {
 
         return 1==count;
     }
+
+    public boolean updateQuantityPurchased(int product_id, int cart_id, int quantityPurchased){
+        int count = template.update(SQL_UPDATE_QTY_PURCHASED, quantityPurchased,product_id, cart_id);
+        System.out.println("count is "+ count);
+        // int count = template.update("update CartItem set QuantityPurchased="+quantityPurchased+" where Product_id="+product_id+" and cart_id="+cart_id);
+        return 1==count;
+    }
 } 
 

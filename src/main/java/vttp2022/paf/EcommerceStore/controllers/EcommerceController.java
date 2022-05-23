@@ -1,9 +1,12 @@
 package vttp2022.paf.EcommerceStore.controllers;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+
+import com.nimbusds.oauth2.sdk.util.MultivaluedMapUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,10 +23,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.thymeleaf.spring5.expression.Mvc;
 
 import vttp2022.paf.EcommerceStore.model.Category;
+import vttp2022.paf.EcommerceStore.model.OrderHistory;
 import vttp2022.paf.EcommerceStore.model.Product;
 import vttp2022.paf.EcommerceStore.model.Test;
 import vttp2022.paf.EcommerceStore.model.User;
+import vttp2022.paf.EcommerceStore.repositories.OrderHistoryRepository;
 import vttp2022.paf.EcommerceStore.repositories.ProductsRepository;
+import vttp2022.paf.EcommerceStore.repositories.UsersRepository;
+import vttp2022.paf.EcommerceStore.services.OrderHistoryService;
 import vttp2022.paf.EcommerceStore.services.ProductsService;
 import vttp2022.paf.EcommerceStore.services.UsersService;
 
@@ -36,6 +43,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class EcommerceController {
 
     @Autowired
+    private UsersRepository usersRepo;
+
+    @Autowired
     private UsersService usersSvc;
 
     @Autowired
@@ -43,6 +53,12 @@ public class EcommerceController {
 
     @Autowired
     private ProductsService productsSvc;
+
+    @Autowired
+    private OrderHistoryService orderhistSvc;
+
+    @Autowired
+    private OrderHistoryRepository orderhistRepo;
 
     
     @RequestMapping(path={"/","/home"})
@@ -109,9 +125,95 @@ public class EcommerceController {
 
     @GetMapping(path="/myAccount")
     //Need to handle so that un-logged in can't enter this page, forbidden
-    public ModelAndView myAccountPage(){
+    public ModelAndView myAccountPage(HttpSession sess){
         ModelAndView mvc = new ModelAndView();
         mvc.setViewName("myAccount");
+        String username;
+
+        //Retrieve username
+        User user = (User)sess.getAttribute("user");
+        if(user==null){
+            username = null;
+            user.setStatus(false);
+            mvc.addObject("user", user);
+        } else{
+            username = user.getUsername();
+            Boolean status = user.isStatus();
+            mvc.addObject("user", user);
+
+        }
+        //Using username, get user_id to retrieve orderhistory and items
+        int user_id = usersRepo.getUserIdByUsername(username);
+        List<OrderHistory> orderhistoryList = new ArrayList<OrderHistory>();
+        orderhistoryList = orderhistSvc.getOrderHistory(user_id);
+        for(OrderHistory orderhistory: orderhistoryList){
+            String stringDate = orderhistory.getDate().toString();
+            orderhistory.setStringDate(stringDate);
+        }
+
+        
+        // if(orderhistoryList!=null){
+        //     for(OrderHistory orderHistory: orderhistoryList){
+        //         int order_id = orderhistRepo.getOrdhistidWithUserid(user_id);
+        //         List<Product> orderHistoryList = orderhistRepo.getOrderHistoryItem(order_id);
+        //     }
+            
+        // }
+        
+        mvc.addObject("orderhistoryList", orderhistoryList);
+
+
+        
+        return mvc;
+    }
+
+    @PostMapping(path="/orderHistory/{orderHistory}")
+    public ModelAndView getOrderHistoryItems(@RequestBody MultiValueMap<String, String> payload,
+     HttpSession sess,@PathVariable String orderHistory){
+        ModelAndView mvc = new ModelAndView();
+        String username;
+
+        //Retrieve username
+        User user = (User)sess.getAttribute("user");
+        if(user==null){
+            username = null;
+            user.setStatus(false);
+            mvc.addObject("user", user);
+        } else{
+            username = user.getUsername();
+            Boolean status = user.isStatus();
+            mvc.addObject("user", user);
+
+        }
+        
+        String order_idString = payload.getFirst(orderHistory);
+        System.out.println("ordhist is: "+ orderHistory);
+        int order_id = Integer.valueOf(order_idString);
+        List<Product> orderHistoryItemListPlaceholder = orderhistRepo.getOrderHistoryItem(order_id);
+        int user_id = usersRepo.getUserIdByUsername(username);
+        OrderHistory soloOrderHistory = orderhistRepo.getOneOrderHistory(order_id);
+        System.out.println("order_id= " + order_id);
+        for(Product product:orderHistoryItemListPlaceholder){
+            System.out.println("productname is: " + product.getProductName());
+        }
+        
+        String stringDate = soloOrderHistory.getDate().toString();
+        soloOrderHistory.setStringDate(stringDate);
+        List<Product> orderHistoryItemList = new ArrayList<>();
+        
+        //To get the photo in, 
+        for(Product product:orderHistoryItemListPlaceholder){
+            int quantityPurchased=product.getQuantityPurchased();
+            product = productsRepo.returnIndividualProductByName(product.getProductName());
+            product.setQuantityPurchased(quantityPurchased);
+            orderHistoryItemList.add(product);
+
+        }
+        
+        
+        mvc.addObject("orderHistory",soloOrderHistory);
+        mvc.addObject("orderHistoryItemList",orderHistoryItemList);
+        mvc.setViewName("orderHistoryItem");
         
         return mvc;
     }
@@ -219,7 +321,7 @@ public class EcommerceController {
         if(!usersSvc.authenticateByEmail(email)){
             //If don't exist, go to signup page
             mvc.setViewName("userSignUp");
-            mvc.addObject(user);
+            mvc.addObject("user",user);
         } else{
             //means user already exists, redirect to home page
             user.setStatus(true);
@@ -234,7 +336,7 @@ public class EcommerceController {
         return mvc;
     }
 
-    @PostMapping(path="/UserSignUpInfo")
+    @PostMapping(path="/Signup/UserSignUpInfo")
     public ModelAndView saveNewGoogleUserAndBindToHttp(@RequestBody MultiValueMap<String, String> payload,
     HttpSession sess){
         //Need to insert a check here to ensure we don't anyhow save things, either 
@@ -257,9 +359,23 @@ public class EcommerceController {
         user.setPassword(password);
         
 
+        if(usersSvc.authenticate(username,password)){
+            //means user already exists, 
+            mvc.addObject("message","account already exists");
+            mvc.setViewName("userSignUp");
+            return mvc;
+        }
+
         if (!usersSvc.authenticate(username, password)) {
             // Means user not registered,
            try{
+               if(usersSvc.authenticate(username)){
+                   //if username is already taken,
+                   mvc.addObject("message", "Username taken");
+                   mvc.setViewName("userSignUp");
+                   return mvc;
+               }
+               //Now we try inserting the new user. I didn't put much requirements so should be fine
                usersSvc.insertNewUser(user); //also created a cart when u insert new user
                user.setStatus(true);
                mvc.addObject("user",user);
@@ -269,10 +385,11 @@ public class EcommerceController {
             //registered successfully and return
             } catch(Exception ex){ //Here can create custom exception
                 mvc.setStatus(HttpStatus.BAD_REQUEST);
-                ex.printStackTrace();
-            }
-        }
- 
+                }
+                
+        } 
+            
+        
 
         mvc.setViewName("signUpSuccess");
         return mvc;
