@@ -338,9 +338,7 @@
             <script
                 src='https://checkout.stripe.com/checkout.js' 
                 class='stripe-button'
-                th:attr='data-key=${stripePublicKey},
-                         data-amount=${amount},
-                         data-currency=${currency}'
+               
                 data-name='VTTP'
                 data-description='E-commerce checkout'
                 data-image='/img/VTTP-Logo.png'
@@ -351,8 +349,16 @@
     </body>
 </html>
 
-                <!-- data-name='VTTP'
+
+<!-- <script
+                src='https://checkout.stripe.com/checkout.js' 
+                class='stripe-button'
+                th:attr='data-key=${stripePublicKey},
+                         data-amount=${amount},
+                         data-currency=${currency}'
+                data-name='VTTP'
                 data-description='E-commerce checkout'
                 data-image='/img/VTTP-Logo.png'
                 data-locale='auto'
-                data-zip-code='false' -->
+                data-zip-code='false'>
+            </script> -->
