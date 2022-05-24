@@ -63,7 +63,6 @@ public class PaymentsController {
         int quantityPurchased;
         double totalAmount=0;
 
-        System.out.println("Verifying the problem happened here3");
 
         //Check if anon or user
         User user = (User)sess.getAttribute("user");
@@ -91,10 +90,8 @@ public class PaymentsController {
         totalAmount = amount;
         mvc.addObject("totalAmount", totalAmount);
         mvc.addObject("amount",amount); //in cents  
-        System.out.println("Verifying the problem happened here1");
         mvc.addObject("stripePublicKey", stripePublicKey);
-        System.out.println("Verifying the problem happened here2");
-
+        System.out.println("Verifiny able to take stripekey: " + stripePublicKey);
         mvc.addObject("currency","SGD");
         
         mvc.setViewName("/checkout");
