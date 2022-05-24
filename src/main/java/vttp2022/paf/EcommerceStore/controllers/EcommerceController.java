@@ -63,7 +63,6 @@ public class EcommerceController {
     
     @RequestMapping(path={"/","/home"})
     public ModelAndView homePage(HttpSession sess){
-        System.out.println("it did run here orig");
         ModelAndView mvc = new ModelAndView();
         mvc.setViewName("index");
         String username;
@@ -72,23 +71,19 @@ public class EcommerceController {
         if(user==null){
             username = null;
         } else{
-
         username = user.getUsername();
         }
 
         //returning different status 
         if (!usersSvc.authenticate(username)) {
             // Not successful
-            System.out.println("User failed to authenticate on homepage");
             return mvc;
 
         } else {
             // Successful
-            System.out.println("else was ran");
 
             user.setStatus(true);
             mvc.addObject("user", user);
-            System.out.println("User authenticated on homepage");
             return mvc;
         }
         
@@ -108,7 +103,6 @@ public class EcommerceController {
         } else{
             user = placeholder;
             Boolean status = user.isStatus();
-            System.out.println("From Ourstory, the user's status is: "+ status);
             mvc.addObject("user", user);
         }
                 
@@ -141,7 +135,7 @@ public class EcommerceController {
             Boolean status = user.isStatus();
             mvc.addObject("user", user);
         }
-        
+
         //Using username, get user_id to retrieve orderhistory and items
         int user_id = usersRepo.getUserIdByUsername(username);
         List<OrderHistory> orderhistoryList = new ArrayList<OrderHistory>();
