@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
@@ -69,7 +70,7 @@ public class UserTest {
         user.setPassword("hoho");
         Assertions.assertThrows(DuplicateKeyException.class, ()-> {
             usersSvc.insertNewUser(user);});
-    }
+        }
 
     @Test
     void cantGetUnknownUserName(){
@@ -94,6 +95,24 @@ public class UserTest {
 
     //     assertEquals(true, verification);
         
+    // }
+
+    // @Test
+    // void testInsertNewUser(){
+    //     String username="bigtester";
+    //     User user = new User();
+    //     user.setName("bigtester");
+    //     user.setUsername(username);
+    //     user.setEmail("bigtester.com");
+    //     user.setPassword("bigtester");
+    //     int user_id=999;
+        
+    //     Mockito.when(usersRepo.insertNewUser(user)).thenReturn(true);
+    //     Mockito.when(usersRepo.getUserIdByUsername(username)).thenReturn(user_id);
+    //     Mockito.when(productsRepo.createCartForNewUserId(user_id)).thenReturn(true);
+
+      
+    //     assertEquals(true, usersSvc.insertNewUser(user));
     // }
 
 
