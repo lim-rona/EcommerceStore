@@ -106,15 +106,15 @@ public class ProductsController {
         mvc.setViewName("individualProduct");
         String username;
 
-        //Retrieve username
-        User user = (User)sess.getAttribute("user");
-        if(user==null){
-            username = null;
+        User placeholder = (User)sess.getAttribute("user");
+        User user = new User();
+        if(placeholder==null){
             user.setStatus(false);
             mvc.addObject("user", user);
         } else{
-            username = user.getUsername();
+            user = placeholder;
             Boolean status = user.isStatus();
+            System.out.println("From Ourstory, the user's status is: "+ status);
             mvc.addObject("user", user);
         }
 
