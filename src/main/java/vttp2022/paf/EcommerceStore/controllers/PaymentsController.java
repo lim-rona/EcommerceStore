@@ -94,7 +94,7 @@ public class PaymentsController {
         System.out.println("Verifiny able to take stripekey: " + stripePublicKey);
         mvc.addObject("currency","SGD");
         
-        mvc.setViewName("/checkout");
+        mvc.setViewName("checkout");
         System.out.println("Verifying the problem happened here5");
 
         return mvc;
