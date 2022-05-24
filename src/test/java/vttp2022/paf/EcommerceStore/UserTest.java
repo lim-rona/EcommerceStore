@@ -4,13 +4,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EcommerceStoreApplicationTests {
+public class UserTest {
+    
+    @Test
+    void ableToMakeNewUser(){
 
-	@Test
-	void contextLoads() {
-	}
- 
+    }
 
-
-
+    @Test
+    void verifyHohoExists(){
+            
+    }
 }

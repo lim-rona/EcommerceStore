@@ -101,9 +101,22 @@ public class ProductsController {
     }
 
     @GetMapping(path="/product/{productName}")
-    public ModelAndView individualProductPage(@PathVariable String productName){
+    public ModelAndView individualProductPage(@PathVariable String productName, HttpSession sess){
         ModelAndView mvc = new ModelAndView();
         mvc.setViewName("individualProduct");
+        String username;
+
+        //Retrieve username
+        User user = (User)sess.getAttribute("user");
+        if(user==null){
+            username = null;
+            user.setStatus(false);
+            mvc.addObject("user", user);
+        } else{
+            username = user.getUsername();
+            Boolean status = user.isStatus();
+            mvc.addObject("user", user);
+        }
 
         Product product = new Product();
         product = productsRepo.returnIndividualProductByName(productName);

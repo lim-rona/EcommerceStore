@@ -140,8 +140,8 @@ public class EcommerceController {
             username = user.getUsername();
             Boolean status = user.isStatus();
             mvc.addObject("user", user);
-
         }
+        
         //Using username, get user_id to retrieve orderhistory and items
         int user_id = usersRepo.getUserIdByUsername(username);
         List<OrderHistory> orderhistoryList = new ArrayList<OrderHistory>();
@@ -377,11 +377,32 @@ public class EcommerceController {
                }
                //Now we try inserting the new user. I didn't put much requirements so should be fine
                usersSvc.insertNewUser(user); //also created a cart when u insert new user
-               user.setStatus(true);
-               mvc.addObject("user",user);
-               mvc.addObject("message", "You have been added to the system successfully!");
-               sess.setAttribute("username", user.getUsername());
-               sess.setAttribute("user", user);
+
+                List<Product> cartList = new ArrayList<>();
+
+                //If a lists exists for the httpsession, set it to cartList
+                if(sess.getAttribute("cartList")!=null){
+                    cartList = (List)sess.getAttribute("cartList");
+                }
+
+               //Now need to take the httpsession cart and add to user's cart:
+               for (int i = 0; i < cartList.size(); i++) {
+                Product product = new Product();
+                product = cartList.get(i);
+                String productName = product.getProductName();
+                int quantityPurchased = product.getQuantityPurchased();
+                double price = product.getPrice();
+                productsSvc.addItemIntoUserCart(productName, quantityPurchased, price, username);
+                };
+
+                  //And now we remove the cartList from the httpSession
+                sess.removeAttribute("cartList");
+
+                user.setStatus(true);
+                mvc.addObject("user",user);
+                mvc.addObject("message", "You have been added to the system successfully!");
+                sess.setAttribute("username", user.getUsername());
+                sess.setAttribute("user", user);
             //registered successfully and return
             } catch(Exception ex){ //Here can create custom exception
                 mvc.setStatus(HttpStatus.BAD_REQUEST);
